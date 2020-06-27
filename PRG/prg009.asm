@@ -6031,7 +6031,7 @@ AutoScroll_URDiagonal:
     LSR A
     BCC PRG009_BECE  ; If vertical velocity didn't carry, jump to PRG009_BECE
 
-    INC Level_AScrlHVelCarry     ; Carry horizontal velocity with it
+    INC Level_AScrlHVelCarry     ; Carry horizontal velocity with it ; POINTLESS CODE
 
 PRG009_BECE:
     LDA AScrlURDiag_WrapState
