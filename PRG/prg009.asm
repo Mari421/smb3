@@ -6003,12 +6003,12 @@ PRG009_BEA0:
     RTS      ; Return
 
 AutoScroll_URDiagonalLimits:
-    .byte $70, $D0, $60, $C0, $90, $30, $F0, $00
+    .byte $70, $D0, $60, $C0, $90, $30, $F0, $00 ;Applies to PRG009_BF01
 
 AutoScroll_URDiagonal:
-    INC Level_AScrlVVelCarry
+    INC Level_AScrlVVelCarry ; <-- Increment to start scroll diagonally.
 
-    LDA #$00
+    LDA #$00 ;Interacts the player to be pushed from the screen.
     STA Level_AScrlHVel
     STA Level_AScrlHVelCarry
 
@@ -6016,11 +6016,16 @@ AutoScroll_URDiagonal:
     CMP #$05
     BGE PRG009_BF18  ; If Level_AScrlLoopSel >= 5, jump to PRG009_BF18
 
-    ; Scroll diagonally
-    LDA #$08
-    STA Level_AScrlHVel
-    LDA #-$08
-    STA Level_AScrlVVel
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; Scroll diagonally		;;
+    LDA #$08				;;
+    STA Level_AScrlHVel		;;
+    LDA #-$08				;;
+    STA Level_AScrlVVel		;;
+							;;
+	;Pointless code above?	;;
+							;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     LDA Level_AScrlVVelCarry
     LSR A
@@ -6085,7 +6090,7 @@ PRG009_BF01:
     STA Level_AScrlPosH
 
     ; Set scroll to bottom
-    LDA #$ef
+    LDA #$ef ;Moves to next screen horizontally starting from the bottom. Its also 239 in DEC.
     STA Level_AScrlPosV
 
 PRG009_BF10:
