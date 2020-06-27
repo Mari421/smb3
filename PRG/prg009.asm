@@ -6003,7 +6003,7 @@ PRG009_BEA0:
     RTS      ; Return
 
 AutoScroll_URDiagonalLimits:
-    .byte $70, $D0, $60, $C0, $90, $30, $F0, $00 ;Applies to PRG009_BF01
+    .byte $70, $D0, $60, $C0, $90, $30, $F0, $00 ;Applies to PRG009_BF01 and PRG009_BF18.
 
 AutoScroll_URDiagonal:
     INC Level_AScrlVVelCarry ; <-- Increment to start scroll diagonally.
@@ -6013,7 +6013,7 @@ AutoScroll_URDiagonal:
     STA Level_AScrlHVelCarry
 
     LDA Level_AScrlLoopSel
-    CMP #$05
+    CMP #$05 ; Set the scroll to stop at the end of the level (depending on how many screens?)
     BGE PRG009_BF18  ; If Level_AScrlLoopSel >= 5, jump to PRG009_BF18
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -6081,13 +6081,13 @@ PRG009_BEEC:
     INC Level_AScrlPosHHi    ; Otherwise, apply carry
 
 PRG009_BF01:
-    AND #$f0     ; Align horizontal auto scroll coordinate to grid
+    AND #$f0     ; Align horizontal auto scroll coordinate to grid as X position according to the URDiagonalLimits table.
 
     CMP AutoScroll_URDiagonalLimits-2,Y
     BNE PRG009_BF1D  ; If limit not hit, jump to PRG009_BF1D
 
     ; Lock horizontal scroll to limit
-    STA Level_AScrlPosH
+    STA Level_AScrlPosH  ;Causes Mario to die from the screen if this code was erased.
 
     ; Set scroll to bottom
     LDA #$ef ;Moves to next screen horizontally starting from the bottom. Its also 239 in DEC.
@@ -6095,12 +6095,12 @@ PRG009_BF01:
 
 PRG009_BF10:
     LDY AScrlURDiag_WrapState    ; Y = AScrlURDiag_WrapState
-    INY      ; Y++
-    CPY #$04
+    INY      ; Y++ <--- Makes the screen to move to the next based on the URDiagonalLimits table.
+    CPY #$04 ; Does the same
     BLT PRG009_BF1A  ; If Y < 4, jump to PRG009_BF1A
 
 PRG009_BF18:
-    LDY #$00     ; Y = 0
+    LDY #$00     ; Y = 0  <- Acts the same as PRG009_BF01, but it loads to Y position according to the URDiagonalLimits table.
 
 PRG009_BF1A:
     STY AScrlURDiag_WrapState    ; Update AScrlURDiag_WrapState
